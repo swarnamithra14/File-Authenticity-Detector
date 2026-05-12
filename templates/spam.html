@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spam Analyzer</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #ffffff;
+        }
+
+        header {
+            background: #3b0a6b;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.4rem;
+            text-align: center;
+        }
+
+        .main {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 0;
+        }
+
+        .card {
+            background: #4b0082;
+            padding: 40px;
+            border-radius: 12px;
+            width: 520px;
+            color: white;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            border-radius: 8px;
+            border: none;
+            padding: 10px;
+            margin-top: 10px;
+            resize: none;
+        }
+
+        input[type="file"] {
+            margin-top: 10px;
+            color: white;
+        }
+
+        .btn {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background: #ffd700;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: white;
+            color: #4b0082;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            color: #ccc;
+        }
+
+        /* RESULT BOX */
+        .result-box {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* 🔥 SPAM METER */
+        .meter {
+            width: 100%;
+            height: 20px;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .meter-fill {
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+
+        .low { background: green; }
+        .medium { background: orange; }
+        .high { background: red; }
+
+        .score-text {
+            margin-top: 5px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .section-title {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .word {
+            margin-top: 3px;
+        }
+
+        .asm-box {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            color: white;
+            border: 1px solid white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: white;
+            color: #4b0082;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<header>
+    📩 Spam & Content Analyzer
+</header>
+
+<div class="main">
+    <div class="card">
+
+        <h1>Spam Detection</h1>
+
+        <form method="POST" action="/analyze_spam" enctype="multipart/form-data">
+
+            <label>Paste Text:</label>
+            <textarea name="text" placeholder="Enter message..."></textarea>
+
+            <div class="divider">OR</div>
+
+            <label>Upload File:</label>
+            <input type="file" name="file">
+
+            <button type="submit" class="btn">Analyze Spam</button>
+        </form>
+
+        {% if result %}
+        <div class="result-box">
+
+            <!-- RESULT -->
+            <div class="section-title">Result:</div>
+            <div>{{ result }}</div>
+
+            <!-- METER -->
+            <div class="meter">
+                <div class="meter-fill 
+                    {% if score < 30 %}low
+                    {% elif score < 70 %}medium
+                    {% else %}high
+                    {% endif %}
+                " style="width: {{ score }}%;"></div>
+            </div>
+
+            <div class="score-text">{{ score }}%</div>
+
+            <!-- KEYWORDS -->
+            <div class="section-title">Detected Keywords:</div>
+
+            {% if keywords %}
+                {% for w in keywords %}
+                    <div class="word">⚠ {{ w }}</div>
+                {% endfor %}
+            {% else %}
+                <div class="word">No spam keywords detected</div>
+            {% endif %}
+
+            <!-- 🔥 ASM RESULT -->
+            <div class="section-title">ASM Detection:</div>
+            <div class="asm-box">
+                {{ asm_result }}
+            </div>
+
+        </div>
+        {% endif %}
+
+        <a href="/" class="back-btn">Go Back</a>
+
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Detection Result</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #ffffff;
+        }
+
+        /* Navbar */
+        header {
+            background: #3b0a6b;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.4rem;
+            font-weight: 500;
+        }
+
+        /* FIXED MAIN LAYOUT */
+        .main {
+            min-height: 100vh; /* allow full height */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* start from top */
+            padding: 40px 0;
+        }
+
+        /* Card */
+        .card {
+            background: #4b0082;
+            padding: 40px;
+            border-radius: 12px;
+            width: 500px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+
+            max-height: 85vh;   /* prevent overflow */
+            overflow-y: auto;   /* enable scroll */
+        }
+
+        .card h1 {
+            margin-bottom: 20px;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            white-space: pre-line;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .hash-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .hash-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .hash-value {
+            font-size: 0.85rem;
+            word-break: break-all;
+            color: #ffd700;
+        }
+
+        /* 🔥 RISK METER */
+        .meter {
+            width: 100%;
+            height: 20px;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .meter-fill {
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+
+        .low {
+            background: green;
+        }
+
+        .medium {
+            background: orange;
+        }
+
+        .high {
+            background: red;
+        }
+
+        .score-text {
+            margin-top: 8px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        /* Scrollbar styling (optional but cool 😏) */
+        .card::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .card::-webkit-scrollbar-thumb {
+            background: #999;
+            border-radius: 10px;
+        }
+
+        /* Back button */
+        .back-btn {
+            display: inline-block;
+            margin-top: 25px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            border: 1px solid white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            background: white;
+            color: #4b0082;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<header>
+    File Authenticity Detector
+</header>
+
+<div class="main">
+    <div class="card">
+
+        <h1>Detection Result</h1>
+
+        {% if "Suspicious" in result %}
+            <div class="result danger">
+                {{ result }}
+            </div>
+        {% else %}
+            <div class="result success">
+                {{ result }}
+            </div>
+        {% endif %}
+
+        <!-- 🔥 RISK METER -->
+        
+
+        <!-- HASH -->
+        <div class="hash-box">
+            <div class="hash-title">SHA-256 Hash:</div>
+            <div class="hash-value">{{ hash_value }}</div>
+        </div>
+        
+        <!-- MIME -->
+        <div class="hash-box">
+             <div class="hash-title">MIME Type:</div>
+             <div class="hash-value">{{ mime_type }}</div>
+        </div>
+
+        <!-- METADATA -->
+        <div class="hash-box">
+            <div class="hash-title">Metadata:</div>
+
+            {% for key, value in metadata.items() %}
+               <div class="hash-value"><b>{{ key }}:</b> {{ value }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- HIDDEN -->
+        <div class="hash-box">
+            <div class="hash-title">Hidden Content Detection:</div>
+            <div class="hash-value">{{ hidden_result }}</div>
+        </div>
+
+
+        <div class="hash-box">
+            <div class="hash-title">Suspicion Score:</div>
+
+            <div class="meter">
+                <div class="meter-fill 
+                    {% if score < 30 %}low
+                    {% elif score < 70 %}medium
+                    {% else %}high
+                    {% endif %}
+                " style="width: {{ score }}%;"></div>
+            </div>
+
+            <div class="score-text">{{ score }}%</div>
+        </div>
+
+        <!-- REASONS -->
+        <div class="hash-box">
+            <div class="hash-title">Reasons:</div>
+            {% for r in reasons %}
+                <div class="hash-value">⚠ {{ r }}</div>
+            {% endfor %}
+        </div>
+
+        <a href="/download_report?result={{ result }}&hash={{ hash_value }}&mime={{ mime_type }}&score={{ score }}{% for r in reasons %}&reasons={{ r }}{% endfor %}" 
+           class="back-btn">
+           Download Report
+        </a>
+
+        <a href="/" class="back-btn">Go Back</a>
+
+    </div>
+</div>
+
+</body>
+</html>

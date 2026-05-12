@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Security Analyzer</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #ffffff;
+        }
+
+        /* Navbar */
+        header {
+            background: #3b0a6b;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.4rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        /* Layout */
+        .main {
+            min-height: 85vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Container for cards */
+        .container {
+            display: flex;
+            gap: 40px;
+        }
+
+        /* Cards */
+        .card {
+            background: #4b0082;
+            padding: 40px;
+            border-radius: 12px;
+            width: 250px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            background: #5c00a3;
+        }
+
+        .card h2 {
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: #ddd;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<header>
+    🔐 File Security & Content Analysis System
+</header>
+
+<div class="main">
+    <div class="container">
+
+        <!-- FILE AUTHENTICITY -->
+        <a href="/file">
+            <div class="card">
+                <h2>📂 File Authenticity</h2>
+                <p>Detect spoofing, verify integrity, and analyze hidden content.</p>
+            </div>
+        </a>
+
+        <!-- SPAM DETECTOR -->
+        <a href="/spam">
+            <div class="card">
+                <h2>📩 Spam Detector</h2>
+                <p>Analyze text or files for spam and phishing content.</p>
+            </div>
+        </a>
+
+    </div>
+</div>
+
+</body>
+</html>
